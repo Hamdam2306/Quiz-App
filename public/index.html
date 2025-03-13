@@ -4,10 +4,25 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="../build/index.css" />
-    <title>Quiz App V-2</title>
+    <title>Document</title>
   </head>
-  <body>
-    <h1>Hello world Bexruz</h1>
-  </body>
-  <script src="../build/index.js"></script>
+  <body class="h-screen flex items-center justify-center bg-gray-900">
+
+<div class="text-center">
+        <div class="savol flex justify-center items-center gap-24 w-96 h-20 bg-gray-700 p-5 rounded-lg">
+            <div id="num1" class="w-16 h-12 bg-white text-black flex items-center justify-center text-xl font-bold rounded-lg"></div>
+            <div id="operation" class="w-16 h-12 bg-white text-black flex items-center justify-center text-xl font-bold rounded-lg"></div>
+            <div id="num2" class="w-16 h-12 bg-white text-black flex items-center justify-center text-xl font-bold rounded-lg"></div>
+        </div>
+
+    <div class="variantlar mt-10 flex justify-center items-center flex-wrap gap-24 w-96 h-60 bg-gray-700 p-5 rounded-lg">
+            <button id="num" class="w-16 h-12 bg-white text-black text-xl font-bold rounded-lg active:scale-90 transition duration-200"></button>
+            <button id="num" class="w-16 h-12 bg-white text-black text-xl font-bold rounded-lg active:scale-90 transition duration-200"></button>
+            <button id="num" class="w-16 h-12 bg-white text-black text-xl font-bold rounded-lg active:scale-90 transition duration-200"></button>
+            <button id="num" class="w-16 h-12 bg-white text-black text-xl font-bold rounded-lg active:scale-90 transition duration-200"></button>
+    </div>
+</div>
+
+</body>
+  <script src="/build/index.js"></script>
 </html>
