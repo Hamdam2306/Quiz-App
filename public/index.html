@@ -4,10 +4,34 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="../build/index.css" />
-    <title>Quiz App V-2</title>
+    <!-- <link rel="stylesheet" href="main.css" /> -->
+    <title>Document</title>
   </head>
-  <body>
-    <h1>Hello world</h1>
-  </body>
-  <script src="../build/index.js"></script>
+  <body class="h-screen flex items-center justify-center bg-gray-900">
+
+<div class="text-center">
+        <div class="savol flex justify-center items-center gap-24 w-96 h-20 bg-gray-700 p-5 rounded-lg">
+            <div id="num1" class="w-16 h-12 bg-white text-black flex items-center justify-center text-xl font-bold rounded-lg"></div>
+            <div id="operation" class="w-16 h-12 bg-white text-black flex items-center justify-center text-xl font-bold rounded-lg"></div>
+            <div id="num2" class="w-16 h-12 bg-white text-black flex items-center justify-center text-xl font-bold rounded-lg"></div>
+        </div>
+    <div class="variantlar mt-10 flex justify-center items-center flex-wrap gap-24 w-96 h-60 bg-gray-700 p-5 rounded-lg">
+            <button id="num" class="w-16 h-12 bg-white text-black text-xl font-bold rounded-lg active:scale-90 transition duration-200"></button>
+            <button id="num" class="w-16 h-12 bg-white text-black text-xl font-bold rounded-lg active:scale-90 transition duration-200"></button>
+            <button id="num" class="w-16 h-12 bg-white text-black text-xl font-bold rounded-lg active:scale-90 transition duration-200"></button>
+            <button id="num" class="w-16 h-12 bg-white text-black text-xl font-bold rounded-lg active:scale-90 transition duration-200"></button>
+    </div>
+
+    <div class=" mt-10 flex justify-center items-center flex-wrap gap-24 w-96 h-20 bg-gray-700 p-0 rounded-lg">
+        <div class="count" style="width: 100px; height: 60px; background-color: white; font-size: 44px; font-weight: 600;  border-radius: 4px;">10</div>
+        <div class="timer" style="width: 100px; height: 60px; background-color: white; font-size: 44px; font-weight: 600;  border-radius: 4px;">15</div>
+     </div>
+  
+    </div>
+
+
+
+
+</body>
+  <script src="/build/index.js"></script>
 </html>
