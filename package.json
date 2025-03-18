@@ -3,7 +3,7 @@
   "module": "index.ts",
   "type": "module",
   "scripts": {
-    "dev:tailwind": "bunx @tailwindcss/cli -i ./src/tailwind.css -o ./build/index.css --watch",
+    "dev:tailwind": "bunx tailwind -i ./src/tailwind.css -o ./build/index.css --watch",
     "dev:ts": "bun build --watch --outfile=./build/index.js ./src/index.ts",
     "dev": "concurrently \"bun dev:tailwind\" \"bun dev:ts\""
   },
