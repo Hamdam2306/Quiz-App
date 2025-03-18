@@ -1,9 +1,21 @@
 const num1El = document.getElementById("num1") as HTMLElement;
 const operationEl = document.getElementById("operation") as HTMLElement;
 const num2El = document.getElementById("num2") as HTMLElement;
-const buttons = document.querySelectorAll("#num") as NodeListOf<HTMLButtonElement>;
+const buttons = document.querySelectorAll(
+  "#num"
+) as NodeListOf<HTMLButtonElement>;
+const countEl = document.getElementById("count")! as HTMLDivElement;
+const timerEl = document.getElementById("timer")! as HTMLDivElement;
+
+let amountAnswers = 0;
+let timeLeft = 15;
 
 function generateQuestion() {
+  if (amountAnswers === 10) {
+    return;
+  }
+
+  amountAnswers++;
   const num1: number = Math.floor(Math.random() * 20) + 1;
   const num2: number = Math.floor(Math.random() * 20) + 1;
   const operators: string[] = ["+", "-", "*", "/"];
@@ -38,6 +50,7 @@ function generateQuestion() {
       answers.push(fakeAnswer);
     }
   }
+  countEl.innerHTML = String(amountAnswers);
 
   answers.sort(() => Math.random() - 0.5);
 
@@ -46,24 +59,38 @@ function generateQuestion() {
     button.dataset.correct = (answers[index] == correctAnswer).toString();
     button.onclick = () => checkAnswer(button);
   });
+  startTimer();
 }
 
 function checkAnswer(button: HTMLButtonElement) {
   if (button.dataset.correct === "true") {
+    timeLeft = 15;
     alert("✅ Togri javob!");
-    generateQuestion();
   } else {
+    timeLeft = 15;
     alert("❌ Xato! Qayta urinib koring.");
   }
+  generateQuestion();
 }
 
+/*  TIMER */
 
+function startTimer() {
+  timerEl.innerText = `${timeLeft}s`;
 
+  let interval = setInterval(() => {
+    if (timeLeft > 0) {
+      timeLeft--;
+      timerEl.innerText = `${timeLeft}s`;
+    } else {
+      clearInterval(interval);
+      timeLeft = 15; 
+      generateQuestion();
+    }
+  }, 1000);
+}
 
-
-
-
-document.addEventListener("DOMContentLoaded", generateQuestion);
-
-
+document.addEventListener("DOMContentLoaded", () => {
+  generateQuestion();
+});
 
