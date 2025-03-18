@@ -1,62 +1,134 @@
-const num1El = document.getElementById("num1") as HTMLElement;
-const operationEl = document.getElementById("operation") as HTMLElement;
-const num2El = document.getElementById("num2") as HTMLElement;
-const buttons = document.querySelectorAll(
-  "#num"
-) as NodeListOf<HTMLButtonElement>;
+import type { Question } from './types';
+import { answersWrapper, number1Elm, number2Elm, operationElm, orderElm, pointsWrapper, timerElm } from './elements';
+import { getNextQuestion, checkAnswer, getCurrentQuestion, getOrder, state, changeQuestion, generateAnswers } from './db';
+import { answerCls, MAX_QUESTION_COUNT, pointCls } from './constants';
 
-function generateQuestion() {
-  const num1: number = Math.floor(Math.random() * 20) + 1;
-  const num2: number = Math.floor(Math.random() * 20) + 1;
-  const operators: string[] = ["+", "-", "*", "/"];
-  const operator: string =
-    operators[Math.floor(Math.random() * operators.length)];
+export let timeLeft: number = 10;
 
-  let correctAnswer: number = 0;
+export function resetTimeLeft (){
+   timeLeft = 11
+}
 
-  switch (operator) {
-    case "+":
-      correctAnswer = num1 + num2;
-      break;
-    case "-":
-      correctAnswer = num1 - num2;
-      break;
-    case "*":
-      correctAnswer = num1 * num2;
-      break;
-    case "/":
-      correctAnswer = parseFloat((num1 / num2).toFixed(2));
-      break;
-  }
 
-  num1El.innerText = num1.toString();
-  operationEl.innerText = operator;
-  num2El.innerText = num2.toString();
+// HANDLE FUNCTIONS
+function handleSelectAnswer(e: MouseEvent) {
+  const answerBtn = e.target as HTMLButtonElement;
+  const selectedAnswer = +answerBtn.dataset.value!;
 
-  let answers: number[] = [correctAnswer];
-  while (answers.length < 4) {
-    let fakeAnswer: number = Math.floor(Math.random() * 40) + 1;
-    if (!answers.includes(fakeAnswer)) {
-      answers.push(fakeAnswer);
-    }
-  }
+  checkAnswer(selectedAnswer);
+  const question = getCurrentQuestion();
 
-  answers.sort(() => Math.random() - 0.5);
+  const answerBtns = Array.from(answersWrapper.children) as HTMLButtonElement[];
+  answerBtns.forEach(btn => {
+    const answer = +btn.dataset.value!;
+    if (answer === question.correctAnswer) btn.classList.add(answerCls.correct);
 
-  buttons.forEach((button, index) => {
-    button.innerText = answers[index].toString();
-    button.dataset.correct = (answers[index] == correctAnswer).toString();
-    button.onclick = () => checkAnswer(button);
+    btn.disabled = true;
   });
+
+  answerBtn.classList.add(answerCls[question.status as keyof typeof answerCls]);
+  renderPoints();
+  setTimeout(init, 1000)
+
 }
 
-function checkAnswer(button: HTMLButtonElement) {
-  if (button.dataset.correct === "true") {
-    alert("✅ Togri javob!");
-  } else {
-    alert("❌ Xato! Qayta urinib koring.");
+function handleSelectQuestion(e: MouseEvent) {
+  const pointElm = e.target as HTMLButtonElement;
+  const questionIdx = +pointElm.dataset.value!;
+
+  if (state.questions.length !== MAX_QUESTION_COUNT) return;
+
+  changeQuestion(questionIdx);
+  const question = getCurrentQuestion();
+  renderQuiz(question);
+}
+
+// UI FUNCTIONS
+
+function renderQuiz(question: Question) {
+  renderQuestion(question);
+  renderAnswers(question);
+  renderOrder();
+  renderPoints()
+}
+
+function renderQuestion({ number1, number2, operation }: Question) {
+  number1Elm.innerText = number1.toString();
+  number2Elm.innerText = number2.toString();
+  operationElm.innerText = operation;
+}
+
+function renderAnswers({ answers }: Question) {
+  const fragment = document.createDocumentFragment();
+  for (let i = 0; i < answers.length; i++) {
+    const answer = answers[i];
+
+    const answerBtn = document.createElement('button');
+
+    answerBtn.className = 'answer-btn';
+    answerBtn.innerText = answer.toString();
+    answerBtn.dataset.value = answer.toString();
+
+    answerBtn.addEventListener('click', handleSelectAnswer);
+    fragment.append(answerBtn);
   }
-  generateQuestion();
+
+  answersWrapper.replaceChildren(fragment);
 }
 
-document.addEventListener("DOMContentLoaded", generateQuestion);
+function renderOrder() {
+  const order = getOrder();
+
+  orderElm.innerText = order.toString();
+}
+
+function renderPoints() {
+  const fragment = document.createDocumentFragment();
+  for (let i = 0; i < state.questions.length; i++) {
+    const question = state.questions[i];
+
+    const pointElm = document.createElement('button');
+
+    pointElm.classList.add('point', pointCls[question.status]);
+    pointElm.innerText = `${i + 1}`;
+    pointElm.dataset.value = i.toString();
+
+    pointElm.addEventListener('click', handleSelectQuestion);
+    fragment.append(pointElm);
+  }
+
+  pointsWrapper.replaceChildren(fragment);
+}
+
+// LOGIC FUNCTIONS
+export function init() {
+  const question = getNextQuestion();
+  if (question) {
+    renderQuiz(question);
+    startTimer(); 
+  }
+  // startTimer()
+}
+
+let interval: number | undefined; // Intervalni global o‘zgaruvchi sifatida e'lon qilamiz
+
+export function startTimer(){
+  if (interval) clearInterval(interval); // Eski intervalni to‘xtatamiz
+
+  timerElm.innerText = `${timeLeft}s`;
+  interval = window.setInterval(() => {
+    if (timeLeft > 0) {
+      timeLeft--;
+      timerElm.innerText = `${timeLeft}s`;
+    } else {
+      clearInterval(interval); // Avval intervalni to‘xtatamiz
+      interval = undefined; // Intervalni tozalaymiz
+      timeLeft = 10;
+      init(); // Yangi savol chiqaramiz
+    }
+  }, 1000);
+}
+
+
+window.addEventListener('load', init);
+// window.addEventListener('load', startTimer);
